@@ -2,3 +2,48 @@ Operation,Operands,Result
 add,2 4,6.0
 add,2 4,6.0
 clrhis,,Calculation history cleared.
+menu,,"Available Commands:
+ - add
+ - sub
+ - mul
+ - div
+ - history
+ - clrhis
+ - delhis
+ - menu"
+menu,,"Available Commands:
+ - add
+ - sub
+ - mul
+ - div
+ - history
+ - clrhis
+ - delhis
+ - menu"
+menu,,"Available Commands:
+ - add
+ - sub
+ - mul
+ - div
+ - history
+ - clrhis
+ - delhis
+ - menu"
+menu,,"Available Commands:
+ - add
+ - sub
+ - mul
+ - div
+ - history
+ - clrhis
+ - delhis
+ - menu"
+menu,,"Available Commands:
+ - add
+ - sub
+ - mul
+ - div
+ - history
+ - clrhis
+ - delhis
+ - menu"

@@ -7,27 +7,30 @@ from commands import CommandHandler, Command
 from dotenv import load_dotenv
 import logging
 import logging.config
+from commands.menu_command import MenuCommand
 from commands.calculator import AddCommand, SubtractCommand, MultiplyCommand, DivideCommand
-from history_manager import HistoryManager
 from commands.history_commands import HistoryCommand, ClearHistoryCommand, DeleteHistoryCommand
-
+from history_manager import HistoryManager
 
 class App:
     def __init__(self):
         os.makedirs('logs', exist_ok=True)
         os.makedirs('data', exist_ok=True)
+        os.makedirs('app/plugins', exist_ok=True)
+
         self.configure_logging()
         load_dotenv()
         self.settings = self.load_environment_variables()
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
+
         self.command_handler = CommandHandler()
-        self.history_manager = HistoryManager() 
+        self.history_manager = HistoryManager()
         self.register_calculator_commands()
         self.register_history_commands()
+        self.load_plugins()
+        self.register_command_menu()
         
-        # Debug: Log registered commands at startup
         logging.info(f"Registered commands: {list(self.command_handler.commands.keys())}")
-        print("DEBUG: Registered commands ->", list(self.command_handler.commands.keys()))
 
     def configure_logging(self):
         logging_conf_path = 'logging.conf'
@@ -65,6 +68,10 @@ class App:
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
                 self.command_handler.register_command(plugin_name, item())
                 logging.info(f"Command '{plugin_name}' from plugin '{plugin_name}' registered.")
+
+    def register_command_menu(self):
+        """Registers the 'menu' command properly."""
+        self.command_handler.register_command("menu", MenuCommand(self.command_handler))
 
     def register_calculator_commands(self):
         """Registers calculator commands directly inside `app/__init__.py` to avoid circular imports."""
