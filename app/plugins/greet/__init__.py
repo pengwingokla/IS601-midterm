@@ -1,14 +1,21 @@
-import logging
-from commands import Command
+"""
+greet_command.py
 
+This module defines the `GreetCommand`, which implements a simple greeting command.
+It follows the Command pattern and logs and prints a greeting message when executed.
+
+Classes:
+- GreetCommand: A command that logs and prints "Hello, World!".
+"""
+import logging
+from app.commands import Command
 
 class GreetCommand(Command):
+    """A command that logs and prints a greeting message."""
     def execute(self):
+        """Executes the greeting command.
+        This method logs and prints "Hello, World!" to the console.
+        It also demonstrates tuple and list initialization.
+        """
         logging.info("Hello, World!")
-
-        mylist_tuple = (1,2,3,4)
-        mylist = [1,2,3,4]
-
-        
-
         print("Hello, World!")
