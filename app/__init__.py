@@ -8,15 +8,18 @@ from dotenv import load_dotenv
 import logging
 import logging.config
 from commands.calculator import AddCommand, SubtractCommand, MultiplyCommand, DivideCommand
+from history_manager import HistoryManager
 
 class App:
     def __init__(self):
         os.makedirs('logs', exist_ok=True)
+        os.makedirs('data', exist_ok=True)
         self.configure_logging()
         load_dotenv()
         self.settings = self.load_environment_variables()
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
         self.command_handler = CommandHandler()
+        self.history_manager = HistoryManager() 
         self.register_calculator_commands()
         
         # Debug: Log registered commands at startup
@@ -94,6 +97,7 @@ class App:
                     result = self.command_handler.execute_command(command_name, *args)
                     if result is not None:
                         print(f"Result: {result}")
+                        self.history_manager.save_operation(command_name, args, result)
                 except KeyError:
                     logging.error(f"Unknown command: {command_name}")
                     print(f"Unknown command: {command_name}")
