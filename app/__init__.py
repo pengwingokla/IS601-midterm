@@ -9,6 +9,8 @@ import logging
 import logging.config
 from commands.calculator import AddCommand, SubtractCommand, MultiplyCommand, DivideCommand
 from history_manager import HistoryManager
+from commands.history_commands import HistoryCommand, ClearHistoryCommand, DeleteHistoryCommand
+
 
 class App:
     def __init__(self):
@@ -21,6 +23,7 @@ class App:
         self.command_handler = CommandHandler()
         self.history_manager = HistoryManager() 
         self.register_calculator_commands()
+        self.register_history_commands()
         
         # Debug: Log registered commands at startup
         logging.info(f"Registered commands: {list(self.command_handler.commands.keys())}")
@@ -70,6 +73,39 @@ class App:
         self.command_handler.register_command("mul", MultiplyCommand())
         self.command_handler.register_command("div", DivideCommand())
         logging.info("Calculator commands registered successfully.")
+
+    def register_history_commands(self):
+        """Registers history-related commands."""
+        self.command_handler.register_command("history", HistoryCommand())
+        self.command_handler.register_command("clrhis", ClearHistoryCommand())
+        self.command_handler.register_command("delhis", DeleteHistoryCommand())
+
+    def show_history(self, *args):
+        """Displays calculation history."""
+        history_df = self.history_manager.get_history()
+        if history_df.empty:
+            print("No history available.")
+        else:
+            print(history_df.to_string(index=True))
+
+    def clear_history(self, *args):
+        """Clears calculation history."""
+        self.history_manager.clear_history()
+        print("Calculation history cleared.")
+
+    def delete_history_entry(self, *args):
+        """Deletes a specific history entry by index."""
+        if len(args) != 1:
+            print("Usage: delete_history <index>")
+            return
+        try:
+            index = int(args[0])
+            if self.history_manager.delete_history_entry(index):
+                print(f"Deleted history entry {index}.")
+            else:
+                print(f"No history entry at index {index}.")
+        except ValueError:
+            print("Error: Index must be a number.")
 
     def start(self):
         self.load_plugins()

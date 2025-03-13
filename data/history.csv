@@ -1,2 +1,4 @@
 Operation,Operands,Result
 add,2 4,6.0
+add,2 4,6.0
+clrhis,,Calculation history cleared.

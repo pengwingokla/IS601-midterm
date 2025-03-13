@@ -33,3 +33,11 @@ class HistoryManager:
         """Clear calculation history."""
         self.history = pd.DataFrame(columns=["Operation", "Operands", "Result"])
         self.history.to_csv(self.HISTORY_FILE, index=False)
+    
+    def delete_history_entry(self, index):
+        """Delete a specific history entry by index."""
+        if index < 0 or index >= len(self.history):
+            return False  # Entry does not exist
+        self.history = self.history.drop(index).reset_index(drop=True)
+        self.history.to_csv(self.HISTORY_FILE, index=False)
+        return True
