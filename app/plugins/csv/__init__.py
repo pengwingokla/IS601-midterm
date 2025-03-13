@@ -1,6 +1,6 @@
 import logging
 import os
-from app.commands import Command
+from commands import Command
 import pandas as pd
 
 

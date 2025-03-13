@@ -1,11 +1,13 @@
+""" This is the docstring """
 import os
 import pkgutil
 import importlib
 import sys
-from app.commands import CommandHandler, Command
+from commands import CommandHandler, Command
 from dotenv import load_dotenv
 import logging
 import logging.config
+from commands.calculator import AddCommand, SubtractCommand, MultiplyCommand, DivideCommand
 
 class App:
     def __init__(self):
@@ -15,6 +17,11 @@ class App:
         self.settings = self.load_environment_variables()
         self.settings.setdefault('ENVIRONMENT', 'PRODUCTION')
         self.command_handler = CommandHandler()
+        self.register_calculator_commands()
+        
+        # Debug: Log registered commands at startup
+        logging.info(f"Registered commands: {list(self.command_handler.commands.keys())}")
+        print("DEBUG: Registered commands ->", list(self.command_handler.commands.keys()))
 
     def configure_logging(self):
         logging_conf_path = 'logging.conf'
@@ -33,7 +40,7 @@ class App:
         return self.settings.get(env_var, None)
 
     def load_plugins(self):
-        plugins_package = 'app.plugins'
+        plugins_package = 'plugins'
         plugins_path = plugins_package.replace('.', '/')
         if not os.path.exists(plugins_path):
             logging.warning(f"Plugins directory '{plugins_path}' not found.")
@@ -50,9 +57,16 @@ class App:
         for item_name in dir(plugin_module):
             item = getattr(plugin_module, item_name)
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
-                # Command names are now explicitly set to the plugin's folder name
                 self.command_handler.register_command(plugin_name, item())
                 logging.info(f"Command '{plugin_name}' from plugin '{plugin_name}' registered.")
+
+    def register_calculator_commands(self):
+        """Registers calculator commands directly inside `app/__init__.py` to avoid circular imports."""
+        self.command_handler.register_command("add", AddCommand())
+        self.command_handler.register_command("sub", SubtractCommand())
+        self.command_handler.register_command("mul", MultiplyCommand())
+        self.command_handler.register_command("div", DivideCommand())
+        logging.info("Calculator commands registered successfully.")
 
     def start(self):
         self.load_plugins()
@@ -62,18 +76,37 @@ class App:
                 cmd_input = input(">>> ").strip()
                 if cmd_input.lower() == 'exit':
                     logging.info("Application exit.")
-                    sys.exit(0)  # Use sys.exit(0) for a clean exit, indicating success.
+                    sys.exit(0)
+
+                command_parts = cmd_input.split()
+                if not command_parts:
+                    continue
+
+                command_name = command_parts[0]
+                args = command_parts[1:]
+
+                # Debugging command execution
+                # logging.info(f"Received command: {command_name} with args: {args}")
+                # print(f"DEBUG: Command -> {command_name}, Args -> {args}")
+
                 try:
-                    self.command_handler.execute_command(cmd_input)
-                except KeyError:  # Assuming execute_command raises KeyError for unknown commands
-                    logging.error(f"Unknown command: {cmd_input}")
-                    sys.exit(1)  # Use a non-zero exit code to indicate failure or incorrect command.
+                    # Ensure arguments are passed correctly
+                    result = self.command_handler.execute_command(command_name, *args)
+                    if result is not None:
+                        print(f"Result: {result}")
+                except KeyError:
+                    logging.error(f"Unknown command: {command_name}")
+                    print(f"Unknown command: {command_name}")
+                except ValueError as ve:
+                    logging.error(f"ValueError: {ve}")
+                    print(f"Error: {ve}")
+
         except KeyboardInterrupt:
             logging.info("Application interrupted and exiting gracefully.")
-            sys.exit(0)  # Assuming a KeyboardInterrupt should also result in a clean exit.
-        finally:
-            logging.info("Application shutdown.")
-
+            sys.exit(0)
+        except Exception as e:
+            logging.error(f"Error: {e}")
+            print(f"Error: {e}")
 
 if __name__ == "__main__":
     app = App()
