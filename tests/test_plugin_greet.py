@@ -2,7 +2,10 @@ import pytest
 from app import App
 
 def test_app_greet_command(capfd, monkeypatch):
-    """Test that the REPL correctly handles the 'greet' command and outputs 'Hello, World!'."""
+    """
+    Test that the REPL correctly handles the 'greet' command 
+    and outputs 'Hello, World!'.
+    """
     inputs = iter(['greet', 'exit'])
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
@@ -17,4 +20,5 @@ def test_app_greet_command(capfd, monkeypatch):
     out, err = capfd.readouterr()
     
     # Assert that 'Hello, World!' was printed to stdout
-    assert "Hello, World!" in out, "The 'greet' command did not produce the expected output."
+    assert "Hello, World!" in out, "The 'greet' command did not produce the \
+                                    expected output."

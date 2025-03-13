@@ -1,9 +1,12 @@
-import pandas as pd
+"""
+history_manager.py
+"""
+
 import os
+import pandas as pd
 
 class HistoryManager:
     """Manages the history of calculations using Pandas."""
-    
     HISTORY_FILE = "data/history.csv"
 
     def __init__(self):
@@ -33,7 +36,7 @@ class HistoryManager:
         """Clear calculation history."""
         self.history = pd.DataFrame(columns=["Operation", "Operands", "Result"])
         self.history.to_csv(self.HISTORY_FILE, index=False)
-    
+
     def delete_history_entry(self, index):
         """Delete a specific history entry by index."""
         if index < 0 or index >= len(self.history):

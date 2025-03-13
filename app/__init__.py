@@ -1,18 +1,26 @@
-""" This is the docstring """
+""""
+Calculator Application
+"""
 import os
 import pkgutil
 import importlib
+import logging.config
 import sys
 from commands import CommandHandler, Command
 from dotenv import load_dotenv
-import logging
-import logging.config
 from commands.menu_command import MenuCommand
-from commands.calculator import AddCommand, SubtractCommand, MultiplyCommand, DivideCommand
+from commands.calculator import (
+    AddCommand,
+    SubtractCommand,
+    MultiplyCommand,
+    DivideCommand,
+)
 from commands.history_commands import HistoryCommand, ClearHistoryCommand, DeleteHistoryCommand
 from history_manager import HistoryManager
 
+
 class App:
+    """ This is the main class of the calculator application"""
     def __init__(self):
         os.makedirs('logs', exist_ok=True)
         os.makedirs('data', exist_ok=True)
@@ -29,49 +37,60 @@ class App:
         self.register_history_commands()
         self.load_plugins()
         self.register_command_menu()
-        
-        logging.info(f"Registered commands: {list(self.command_handler.commands.keys())}")
+
+        logging.info("Registered commands: %s", list(self.command_handler.commands.keys()))
 
     def configure_logging(self):
+        """
+        Logs in terminal
+        """
         logging_conf_path = 'logging.conf'
         if os.path.exists(logging_conf_path):
-            logging.config.fileConfig(logging_conf_path, disable_existing_loggers=False)
+            logging.config.fileConfig(
+                logging_conf_path, disable_existing_loggers=False)
         else:
-            logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+            logging.basicConfig(
+                level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
         logging.info("Logging configured.")
 
     def load_environment_variables(self):
+        """ Load environment variables"""
         settings = {key: value for key, value in os.environ.items()}
         logging.info("Environment variables loaded.")
         return settings
 
     def get_environment_variable(self, env_var: str = 'ENVIRONMENT'):
+        """ Get environment variable"""
         return self.settings.get(env_var, None)
 
     def load_plugins(self):
+        """ Plugin loader """
         plugins_package = 'plugins'
         plugins_path = plugins_package.replace('.', '/')
         if not os.path.exists(plugins_path):
-            logging.warning(f"Plugins directory '{plugins_path}' not found.")
+            logging.warning("Plugins directory %s not found.", plugins_path)
             return
         for _, plugin_name, is_pkg in pkgutil.iter_modules([plugins_path]):
             if is_pkg:
                 try:
-                    plugin_module = importlib.import_module(f'{plugins_package}.{plugin_name}')
+                    plugin_module = importlib.import_module(
+                        f'{plugins_package}.{plugin_name}')
                     self.register_plugin_commands(plugin_module, plugin_name)
                 except ImportError as e:
-                    logging.error(f"Error importing plugin {plugin_name}: {e}")
+                    logging.error("Error importing plugin %s: %s", plugin_name, e)
 
     def register_plugin_commands(self, plugin_module, plugin_name):
+        """ Function to register plugin commands """
         for item_name in dir(plugin_module):
             item = getattr(plugin_module, item_name)
             if isinstance(item, type) and issubclass(item, Command) and item is not Command:
                 self.command_handler.register_command(plugin_name, item())
-                logging.info(f"Command '{plugin_name}' from plugin '{plugin_name}' registered.")
+                logging.info("Command %s from plugin %s registered.", plugin_name, plugin_name)
 
     def register_command_menu(self):
         """Registers the 'menu' command properly."""
-        self.command_handler.register_command("menu", MenuCommand(self.command_handler))
+        self.command_handler.register_command(
+            "menu", MenuCommand(self.command_handler))
 
     def register_calculator_commands(self):
         """Registers calculator commands directly inside `app/__init__.py` to avoid circular imports."""
@@ -115,6 +134,7 @@ class App:
             print("Error: Index must be a number.")
 
     def start(self):
+        """ Function when starting application """
         self.load_plugins()
         logging.info("Application started. Type 'exit' to exit.")
         try:
@@ -137,23 +157,27 @@ class App:
 
                 try:
                     # Ensure arguments are passed correctly
-                    result = self.command_handler.execute_command(command_name, *args)
+                    result = self.command_handler.execute_command(
+                        command_name, *args)
                     if result is not None:
                         print(f"Result: {result}")
-                        self.history_manager.save_operation(command_name, args, result)
+                        self.history_manager.save_operation(
+                            command_name, args, result)
                 except KeyError:
-                    logging.error(f"Unknown command: {command_name}")
+                    logging.error("Unknown command: %s", command_name)
                     print(f"Unknown command: {command_name}")
                 except ValueError as ve:
-                    logging.error(f"ValueError: {ve}")
+                    logging.error("ValueError: %s", ve)
                     print(f"Error: {ve}")
 
         except KeyboardInterrupt:
             logging.info("Application interrupted and exiting gracefully.")
             sys.exit(0)
-        except Exception as e:
-            logging.error(f"Error: {e}")
-            print(f"Error: {e}")
+        except ValueError as ve:
+            logging.error("ValueError: %s", ve)
+            print(f"Error: {ve}")
+
+
 
 if __name__ == "__main__":
     app = App()
