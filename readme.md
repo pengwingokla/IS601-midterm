@@ -27,17 +27,32 @@ Implement a Read-Eval-Print Loop (REPL) to facilitate direct interaction with th
 - Management of calculation history.
 - Access to extended functionalities through dynamically loaded plugins.
 
+#### Checklist:
+✅ REPL implemented in `app/__init__.py`.
+<br>✅ Supports arithmetic operations (`add`, `sub`, `mul`, `div`).
+<br>✅ Manages calculation history via `HistoryManager`.
+<br>✅ Loads plugins dynamically via `load_plugins()`.
+
 ### Plugin System
 
 Create a flexible plugin system to allow seamless integration of new commands or features. This system should:
 - Dynamically load and integrate plugins without modifying the core application code.
 - Include a REPL  "Menu" command to list all available plugin commands, ensuring user discoverability and interaction.
 
+#### Checklist:
+✅ Plugins dynamically loaded from `app/plugins/`.
+<br>✅ Commands from plugins can be executed without modifying core code.
+<br>✅ Implemented a `menu` command that lists available commands.
+
 ### Calculation History Management with Pandas
 
 Utilize Pandas to manage a robust calculation history, enabling users to:
 - Load, save, clear, and delete history records through the REPL interface.
 
+#### Checklist:
+✅ Pandas used to manage history (`history_manager.py`).
+<br>✅ Supports `history`, `clrhis`, and `delhis` commands.
+<br>✅ History is saved to and loaded from CSV using Pandas.
 
 ### Professional Logging Practices
 
@@ -46,59 +61,25 @@ Establish a comprehensive logging system to record:
 - Differentiate log messages by severity (INFO, WARNING, ERROR) for effective monitoring.
 - Dynamic logging configuration through environment variables for levels and output destinations.
 
+#### Checklist:
+✅ Implemented logging (`logging.conf`, logging statements across modules).
+<br>✅ Logs different severity levels (`INFO`, `WARNING`, `ERROR`).
+<br>✅ Dynamic logging configuration through environment variables (`load_dotenv()`).
+
 ### Advanced Data Handling with Pandas
 
 Employ Pandas for:
 - Efficient data reading and writing to CSV files.
 - Managing calculation history.
 
+#### Checklist:
+✅ Efficient data reading/writing using Pandas (`history_manager.py`).
+<br>✅ History stored in CSV (`data/history.csv`).
+<br>✅ Supports CRUD operations on history (Load, Save, Clear, Delete records).
+
 ### Design Patterns for Scalable Architecture
-
+#### Checklist:
 Incorporate key design patterns to address software design challenges, including:
-- **Facade Pattern:** Offer a simplified interface for complex Pandas data manipulations.
-- **Command Pattern:** Structure commands within the REPL for effective calculation and history management.
-- **Factory Method, Singleton, and Strategy Patterns:** Further enhance the application's code structure, flexibility, and scalability.
-
-## Development, Testing, and Documentation Requirements
-
-### Testing and Code Quality
-
-- Achieve a minimum of 90% test coverage with Pytest.
-- Ensure code quality and adherence to PEP 8 standards, verified by Pylint.
-
-### Version Control Best Practices
-
-- Utilize logical commits that clearly group feature development and corresponding tests, evidencing clear development progression.
-
-### Comprehensive Documentation
-
-- Compile detailed documentation in `README.md`, covering setup instructions, usage examples, and an in-depth analysis of architectural decisions, particularly emphasizing the implementation and impact of chosen design patterns and the logging strategy.
-
-
-## Evaluation Criteria
-
-### Total Points: 100
-
-#### Functionality (40 Points)
-
-- **Calculator Operations:** 20 points for implementing basic and statistical operations.
-- **History Management:** 10 points for effective management using Pandas.
-- **Configuration via Environment Variables:** 5 points for flexible application configuration.
-- **REPL Interface:** 5 points for a user-friendly command-line interface.
-
-#### Design Patterns (20 Points)
-
-- **Implementation and Application:** 10 points for the effective use of design patterns.
-- **Documentation and Explanation:** 10 points for thorough documentation of design pattern rationale and implementation.
-
-#### Testing and Code Quality (20 Points)
-
-- **Comprehensive Testing with Pytest:** 10 points for extensive test coverage.
-- **Code Quality and Adherence to Standards:** 10 points for clean, maintainable code.
-
-#### Version Control, Documentation, and Logging (20 Points)
-
-- **Commit History:** 10 points for logical and informative commit messages.
-- **README Documentation:** 5 points for comprehensive setup and usage instructions.
-- **Logging Practices:** 5 points for implementing adaptable and informative logging.
-
+<br>✅ **Facade Pattern:** Offer a simplified interface for complex Pandas data manipulations.
+<br>✅ **Command Pattern:** Structure commands within the REPL for effective calculation and history management.
+<br>✅ **Factory Method, Singleton, and Strategy Patterns:** Further enhance the application's code structure, flexibility, and scalability.
