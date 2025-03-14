@@ -10,6 +10,7 @@ def test_app_greet_command(capfd, monkeypatch):
     monkeypatch.setattr('builtins.input', lambda _: next(inputs))
 
     app = App()
+    app.load_plugins()
     with pytest.raises(SystemExit) as e:
         app.start()
     

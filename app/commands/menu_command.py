@@ -1,10 +1,10 @@
 """
-history_commands.py
+menu_command.py
 
-This module defines Include a REPL "Menu" command to list all available 
+This module defines include a REPL "Menu" command to list all available 
 plugin commands, ensuring user discoverability and interaction.
 """
-from commands import Command
+from app.commands import Command
 
 class MenuCommand(Command):
     """Command to list all available plugin commands."""

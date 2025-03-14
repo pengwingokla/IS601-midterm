@@ -14,8 +14,8 @@ Usage:
     allowing dynamic execution of history-related commands.
 """
 
-from commands import Command
-from history_manager import HistoryManager
+from app.commands import Command
+from app.history_manager import HistoryManager
 
 class HistoryCommand(Command):
     """Command to retrieve and display the calculation history."""

@@ -19,7 +19,7 @@ Example:
     result = add.execute(2, 3, 4)  # Returns 9
 """
 
-from commands import Command
+from app.commands import Command
 
 class AddCommand(Command):
     """Command to perform addition of multiple numbers."""
