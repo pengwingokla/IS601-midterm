@@ -1,9 +1,10 @@
 """
 square.py
 
-This module defines the `SquareCommand` class, which calculates the square of a given number.
+This module defines the `SquareCommand` class,
+which calculates the square of a given number.
 """
-from ..commands import Command
+from commands import Command
 
 
 class SquareCommand(Command):

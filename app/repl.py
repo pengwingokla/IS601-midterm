@@ -1,11 +1,9 @@
 """
 calculator_repl.py
-
-This module defines the `CalculatorREPL` class, which implements a 
-command-line Read-Eval-Print Loop (REPL) for an advanced calculator. 
-It supports basic arithmetic operations, history management, 
+This module defines the `CalculatorREPL` class, which implements a
+command-line Read-Eval-Print Loop (REPL) for an advanced calculator.
+It supports basic arithmetic operations, history management,
 plugin loading, and command handling.
-
 Classes:
     - CalculatorREPL: Implements the interactive calculator REPL.
 
@@ -16,11 +14,11 @@ Example:
     python calculator_repl.py
 """
 
-import readline
 import logging
 from commands.calculator import Calculator
 from plugins.plugin_loader import PluginLoader
 from history_manager import HistoryManager
+
 
 class CalculatorREPL:
     """Command-Line REPL for the Advanced Calculator."""
@@ -52,7 +50,8 @@ class CalculatorREPL:
 
     def run(self):
         """Starts the interactive REPL loop for the calculator."""
-        print("Welcome to the Advanced Calculator REPL. Type 'help' for commands.")
+        print("Welcome to the Advanced Calculator REPL. \
+              Type 'help' for commands.")
         while True:
             try:
                 user_input = input("calc> ").strip()
@@ -62,7 +61,8 @@ class CalculatorREPL:
                 if command in self.commands:
                     self.commands[command](*args)
                 else:
-                    print(f"Unknown command: {command}. Type 'help' for a list of commands.")
+                    print(f"Unknown command: {command}. \
+                          Type 'help' for a list of commands.")
             except Exception as e:
                 logging.error("Error in REPL: %s", e)
                 print(f"An error occurred: {e}")
